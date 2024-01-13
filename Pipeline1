@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    environment {
+        REPO_URL = 'https://github.com/kushalsrihari/DET2.git'
+        PROJECT_FOLDERS = 'cart,catalogue,dispatch,mongo,mysql,payment,ratings,shipping,user,web'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    // Clone the GitHub repository
+                    git branch: 'main', url: REPO_URL
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    def folderList = PROJECT_FOLDERS.split(',')
+
+                    for (folder in folderList) {
+                        // Create a stage for each folder
+                        stage("Build ${folder} Docker Image") {
+                            // Navigate to the specified folder
+                            dir(folder.trim()) {
+                                // Build Docker image for each folder
+                                echo "Building Docker image for ${folder}"
+                                // Corrected Docker build command
+                                sh "docker build -t your_docker_registry/${folder}:latest ."
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
