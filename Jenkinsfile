@@ -32,8 +32,9 @@ pipeline {
                                 echo "Building Docker image for ${folder}"
                                 sh "docker build -t ${DOCKER_REGISTRY}/${folder}:${imageTag} ."
 
-                                 withDockerRegistry(credentialsId: 'DockerHub', toolName: 'docker') {
+                                withDockerRegistry(credentialsId: 'DockerHub', toolName: 'docker') {
                                     sh "docker push ${DOCKER_REGISTRY}/${folder}:${imageTag}"
+                                }
                                 // Increment the tag for the next build
                                 imageTag = "v${BUILD_NUMBER}" // You can customize the tag format as needed
                             }
