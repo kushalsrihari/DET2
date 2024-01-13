@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2.5.0
+        run: docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace actions/checkout:v2.5.0
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERPASS }}" | docker login -u kushalsrihair --password-stdin
