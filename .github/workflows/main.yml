@@ -9,7 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+
     steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
       - name: Checkout Repository
         uses: actions/checkout@v2
 
@@ -18,7 +27,7 @@ jobs:
 
       - name: Build and Push Docker Images
         run: |
-          for dir in cart catalogue dispatch rating dispatch mongo mysql payment rating shipping user web ; do
+          for dir in cart catalogue dispatch rating mongo mysql payment shipping user web load-gen fluent; do
             docker build -t kushalsrihair/$dir:v1 ./$dir
             docker push kushalsrihair/$dir:v1
           done
