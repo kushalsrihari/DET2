@@ -11,7 +11,8 @@ ENV MYSQL_ALLOW_EMPTY_PASSWORD=yes \
 COPY config.sh /root/
 RUN chmod +x /root/config.sh && tr -d '\r' < /root/config.sh > /root/config_unix.sh && mv /root/config_unix.sh /root/config.sh && chown root:root /root/config.sh
 
-# Run the script using bash
+# Switch to root user and run the script using bash
+USER root
 RUN /bin/bash -c /root/config.sh
 
 COPY scripts/* /docker-entrypoint-initdb.d/
