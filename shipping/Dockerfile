@@ -4,6 +4,7 @@
 FROM debian:10 AS build
 
 RUN apt-get update && apt-get -y install maven
+RUN apt-get update && apt-get install -y ca-certificates-java openjdk-11-jdk && update-ca-certificates
 
 WORKDIR /opt/shipping
 
