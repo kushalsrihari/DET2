@@ -25,30 +25,18 @@ pipeline {
 
                     for (folder in folderList) {
                         // Create a stage for each folder
-                        stage("Build ${folder} Docker Image") {
+                        stage("Build ${folder} Docker Image And Push to DockerHub") {
                             // Navigate to the specified folder
                             dir(folder.trim()) {
                                 // Build Docker image for each folder with an incremented tag
                                 echo "Building Docker image for ${folder}"
                                 sh "docker build -t ${DOCKER_REGISTRY}/${folder}:${imageTag} ."
+
+                                 withDockerRegistry(credentialsId: 'DockerHub', toolName: 'docker') {
+                                    sh "docker push ${DOCKER_REGISTRY}/${folder}:${imageTag}"
                                 // Increment the tag for the next build
                                 imageTag = "v${BUILD_NUMBER}" // You can customize the tag format as needed
                             }
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Push Docker Images to DockerHub') {
-            steps {
-                script {
-                    def folderList = PROJECT_FOLDERS.split(',')
-
-                    for (folder in folderList) {
-                        // Push Docker image for each folder to DockerHub with the incremented tag
-                        withDockerRegistry(credentialsId: 'DockerHub', toolName: 'docker') {
-                            sh "docker push ${DOCKER_REGISTRY}/${folder}:${imageTag}"
                         }
                     }
                 }
