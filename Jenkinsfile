@@ -21,25 +21,32 @@ pipeline {
             steps {
                 script {
                     def folderList = PROJECT_FOLDERS.split(',')
-                    def counter = 1
 
                     for (folder in folderList) {
-                        // Increment the tag for each iteration
-                        //initialImageTag = "v${BUILD_NUMBER + 1}" // Increment for the next folder
-                        def imageTag = "v${BUILD_NUMBER + counter}"
                         // Create a stage for each folder
-                        stage("Build ${folder} Docker Image And Push to DockerHub") {
+                        stage("Build ${folder} Docker Image") {
                             // Navigate to the specified folder
                             dir(folder.trim()) {
-                                // Build Docker image for each folder with an incremented tag
+                                // Build Docker image for each folder
                                 echo "Building Docker image for ${folder}"
-                                sh "docker build -t ${DOCKER_REGISTRY}/${folder}:${imageTag} ."
-
-                                withDockerRegistry(credentialsId: 'DockerHub', toolName: 'docker') {
-                                    sh "docker push ${DOCKER_REGISTRY}/${folder}:${imageTag}"
-                                }
-                                counter++ // Increment the counter for the next build
+                                // Corrected Docker build command
+                                sh "docker build -t ${DOCKER_REGISTRY}/${folder}:latest ."
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Images to DockerHub') {
+            steps {
+                script {
+                    def folderList = PROJECT_FOLDERS.split(',')
+
+                    for (folder in folderList) {
+                        // Push Docker image for each folder to DockerHub
+                        withDockerRegistry(credentialsId: 'DockerHub', toolName: 'docker') {
+                            sh "docker push ${DOCKER_REGISTRY}/${folder}:latest"
                         }
                     }
                 }
