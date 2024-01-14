@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     def folderList = PROJECT_FOLDERS.split(',')
-                    def imageTag = "1"
+                    def imageTag = "v${BUILD_NUMBER}"
 
                     for (folder in folderList) {
                         // Create a stage for each folder
