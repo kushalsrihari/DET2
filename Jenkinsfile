@@ -26,8 +26,8 @@ pipeline {
                     for (folder in folderList) {
                         // Increment the tag for each iteration
                         def imageTag = initialImageTag
-                        initialImageTag = "v${BUILD_NUMBER + 1}" // Increment for the next folder
-
+                        //initialImageTag = "v${BUILD_NUMBER + 1}" // Increment for the next folder
+                        initialImageTag = "v" + (BUILD_NUMBER + 1)
                         // Create a stage for each folder
                         stage("Build ${folder} Docker Image And Push to DockerHub") {
                             // Navigate to the specified folder
