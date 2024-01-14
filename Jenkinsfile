@@ -21,13 +21,13 @@ pipeline {
             steps {
                 script {
                     def folderList = PROJECT_FOLDERS.split(',')
-                    def initialImageTag = "v${BUILD_NUMBER}"
+                    def counter = 1
 
                     for (folder in folderList) {
                         // Increment the tag for each iteration
                         def imageTag = initialImageTag
                         //initialImageTag = "v${BUILD_NUMBER + 1}" // Increment for the next folder
-                        initialImageTag = "v" + (BUILD_NUMBER + 1)
+                        def imageTag = "v${BUILD_NUMBER + counter}"
                         // Create a stage for each folder
                         stage("Build ${folder} Docker Image And Push to DockerHub") {
                             // Navigate to the specified folder
@@ -39,6 +39,7 @@ pipeline {
                                 withDockerRegistry(credentialsId: 'DockerHub', toolName: 'docker') {
                                     sh "docker push ${DOCKER_REGISTRY}/${folder}:${imageTag}"
                                 }
+                                counter++ // Increment the counter for the next build
                             }
                         }
                     }
