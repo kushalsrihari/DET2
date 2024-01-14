@@ -2,7 +2,7 @@
 # Default is docker/robotshop/image:latest
 image:
   repo: kushalsrihari
-  version: latest
+  version: v1
   pullPolicy: IfNotPresent
 
 # EUM configuration
