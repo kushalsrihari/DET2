@@ -25,7 +25,6 @@ pipeline {
 
                     for (folder in folderList) {
                         // Increment the tag for each iteration
-                        def imageTag = initialImageTag
                         //initialImageTag = "v${BUILD_NUMBER + 1}" // Increment for the next folder
                         def imageTag = "v${BUILD_NUMBER + counter}"
                         // Create a stage for each folder
